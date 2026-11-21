@@ -48,14 +48,14 @@ $$
 We can then use the constitutive relations $D_x = \epsilon E_x$ and $B_y = \mu H_y$ to obtain the following relations:
 
 $$
-\begin{align}
+\begin{aligned}
 \frac{\partial E_x}{\partial z}
 &= -\mu\frac{\partial H_y}{\partial t}
-\tag{1}\\[1.5emem]
+&& \text{(1)}\\
 \frac{\partial H_y}{\partial z}
 &= -\epsilon\frac{\partial E_x}{\partial t}
-\tag{2}
-\end{align}
+&& \text{(2)}
+\end{aligned}
 $$
 
 
@@ -67,10 +67,10 @@ To obtain the wave equations, we differentiate equation (1) with respect to the 
 $$
 \begin{equation} 
 \begin{split}
-\frac{\partial^2 E_x}{\partial z^2} =& - \mu \frac{\partial}{\partial z}\bigg(\frac{\partial H_y}{\partial t}\bigg) \\[1.5em] 
-=&  - \mu \frac{\partial}{\partial t}\bigg(\frac{\partial H_y}{\partial z}\bigg) \\[1.5em]
-=& - \mu \frac{\partial}{\partial t}\bigg(-\epsilon\frac{\partial E_x}{\partial t}\bigg) \\[1.5em]
-=&  \,\mu\epsilon\, \frac{\partial^2 E_x}{\partial t^2} \\[1.5em]
+\frac{\partial^2 E_x}{\partial z^2} =& - \mu \frac{\partial}{\partial z}\bigg(\frac{\partial H_y}{\partial t}\bigg) \\ 
+=&  - \mu \frac{\partial}{\partial t}\bigg(\frac{\partial H_y}{\partial z}\bigg) \\
+=& - \mu \frac{\partial}{\partial t}\bigg(-\epsilon\frac{\partial E_x}{\partial t}\bigg) \\
+=&  \mu\epsilon \frac{\partial^2 E_x}{\partial t^2} \\
 \end{split}
 \end{equation} \tag{3}
 $$
@@ -80,15 +80,16 @@ By following the same steps with equation (2), we obtain:
 $$
 \begin{equation} 
 \begin{split}
-\frac{\partial^2 H_y}{\partial z^2} =& - \epsilon \frac{\partial}{\partial z}\bigg(\frac{\partial E_x}{\partial t}\bigg) \\[1.5em] 
-=&  - \epsilon \frac{\partial}{\partial t}\bigg(\frac{\partial E_x}{\partial z}\bigg) \\[1.5em]
-=& - \epsilon \frac{\partial}{\partial t}\bigg(-\mu\frac{\partial H_y}{\partial t}\bigg) \\[1.5em]
-=&  \,\mu\epsilon\, \frac{\partial^2 H_y}{\partial t^2} \\[1.5em]
+\frac{\partial^2 H_y}{\partial z^2} =& - \epsilon \frac{\partial}{\partial z}\bigg(\frac{\partial E_x}{\partial t}\bigg) \\ 
+=&  - \epsilon \frac{\partial}{\partial t}\bigg(\frac{\partial E_x}{\partial z}\bigg) \\
+=& - \epsilon \frac{\partial}{\partial t}\bigg(-\mu\frac{\partial H_y}{\partial t}\bigg) \\
+=&  \mu\epsilon \frac{\partial^2 H_y}{\partial t^2} \\
 \end{split} 
 \end{equation} \tag{4}
 $$
 
 Equations (3) and (4) now represent the governing wave equations for the selected field components. From these equations, we obtain the theoretical wave speed:
+
 $$
 v = \frac{1}{\sqrt{\mu\epsilon}}
 $$
@@ -97,7 +98,7 @@ A sinusoidal solution for the electric and magnetic fields can be expressed as f
 
 $$
 \begin{align}
-E_x(z,t) &= E_0\cos(kz - \omega t + \delta)\ \\[1.5em]
+E_x(z,t) &= E_0\cos(kz - \omega t + \delta)\ \\
 H_y(z,t) &= H_0\cos(kz - \omega t + \delta)
 \end{align}
 $$
@@ -115,11 +116,12 @@ where the variables are defined as follows:
 - $\eta$ : Intrinsic impedance of the medium
 
 The following relations also apply:
+
 $$
 \begin{align*}
 \lambda &= \frac{2\pi}{k}
 & \omega &= 2\pi f
-& v &= f\lambda = \frac{\omega}{k} \\[1em]
+& v &= f\lambda = \frac{\omega}{k} \\
 \eta &= \sqrt{\frac{\mu}{\epsilon}}
 & H_0 &= \frac{E_0}{\eta}
 \end{align*}
