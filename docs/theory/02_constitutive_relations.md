@@ -1,20 +1,27 @@
 ## 2. Constitutive Relations
 
 For a dielectric material subjected to an electric field, the general macroscopic electric displacement field is defined as:
+
 $$
 \mathbf{D} = \epsilon_0\mathbf{E}+\mathbf{P}
 $$
+
 Here, $\mathbf{E}$ is the total electric field within the dielectric, $\mathbf{P}$ is the polarization of the material, and $\epsilon_0$ is the permittivity of free space.
 
 The bound volume charge density is related to the polarization vector $\mathbf{P}$ by the following relation:
+
 $$
 \rho_b=-\nabla\cdot\mathbf{P}
 $$
+
 For a linear, isotropic and homogeneous dielectric medium, the polarization can be expressed in terms of the electric susceptibility of the material $\chi_e$ as:
+
 $$
 \mathbf{P}=\epsilon_0\chi_e\mathbf{E}
 $$
+
 Therefore, the constitutive relation simplifies to:
+
 $$
 \begin{split}
 \mathbf{D} & =
@@ -22,7 +29,9 @@ $$
 & =\epsilon\mathbf{E}
 \end{split}
 $$
+
 The absolute permittivity is defined as follows: 
+
 $$
 \epsilon=\epsilon_0\epsilon_r
 =\epsilon_0(1+\chi_e)
