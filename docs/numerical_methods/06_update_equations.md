@@ -30,7 +30,7 @@ To complete the discretization of Ampère-Maxwell's equation, we also need to ap
 $$
 \begin{aligned}
 \left.\frac{\partial E_x}{\partial t} \right|_{z=z_i,\;t=t_{n+\frac12}}
-&\approx \frac{E_x^{n+1} (i)\, - \, E_x^n (i)}{\Delta t} 
+&\approx \frac{E_x^{n+1} (i) -  E_x^n (i)}{\Delta t} 
 \end{aligned}
 $$
 
@@ -38,7 +38,7 @@ The discretized form of Ampère-Maxwell's equation is therefore:
 
 $$
 \begin{aligned}
-\frac{H_y^{n+\frac12}(i+\frac12)-H_y^{n+\frac12}(i-\frac12)}{\Delta z} &= - \epsilon \, \frac{E_x^{n+1} (i)\, - \, E_x^n (i)}{\Delta t}  
+\frac{H_y^{n+\frac12}(i+\frac12)-H_y^{n+\frac12}(i-\frac12)}{\Delta z} &= - \epsilon  \frac{E_x^{n+1} (i) -  E_x^n (i)}{\Delta t}  
 \end{aligned}
 $$
 
@@ -69,7 +69,7 @@ $$
 \begin{aligned}
 \left.\frac{\partial E_x}{\partial z} \right|_{z=z_{i+\frac12},\;t=t_{n}}
 &\approx 
-\frac{E_x^{n} (i+1)\, - \, E_x^n (i)}{\Delta z} 
+\frac{E_x^{n} (i+1) -  E_x^n (i)}{\Delta z} 
 \end{aligned}
 $$
 
@@ -77,8 +77,8 @@ We can now express the second update equation from Faraday's law approximation:
 
 $$
 \begin{aligned}
-\frac{E_x^{n} (i+1)\, - \, E_x^n (i)}{\Delta z} 
-&= -\mu \,\frac{H_y^{n+\frac12}(i+\frac12)-H_y^{n-\frac12}(i+\frac12)}{\Delta t}
+\frac{E_x^{n} (i+1)-E_x^n (i)}{\Delta z} 
+&= -\mu \frac{H_y^{n+\frac12}(i+\frac12)-H_y^{n-\frac12}(i+\frac12)}{\Delta t}
 \end{aligned}
 $$
 
