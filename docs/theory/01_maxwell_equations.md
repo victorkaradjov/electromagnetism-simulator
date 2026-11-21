@@ -11,15 +11,15 @@ Gauss's law states that the divergence of the electric displacement $\mathbf{D}$
 $$
 \nabla \cdot \mathbf{B} = 0
 $$
+
 Here, Gauss's law states that the divergence of the magnetic flux density $\mathbf{B}$ is zero. Since the divergence represents the local net outward magnetic flux per unit volume at a point, this relation implies that the same amount of magnetic flux enters a closed surface as leaves it. Hence, the magnetic field lines either form closed loops or extend to infinity; they have no starting or ending points. 
 
 ## 1.3 Faraday's Law
 
 $$
-\nabla \times \mathbf{E}
-=
--\frac{\partial \mathbf{B}}{\partial t}
+\nabla \times \mathbf{E}=-\frac{\partial \mathbf{B}}{\partial t}
 $$
+
 Faraday's law states that the curl of the electric field equals the negative time derivative of the magnetic flux density. The curl of $\mathbf{E}$ represents the local circulation of the electric field per unit area. Therefore, this equation relates the local circulation of the electric field to the temporal variation of the magnetic flux density.
 
 This relation is a consequence of Faraday's discovery that a wire loop is subject to an electromotive force when the magnetic flux through the loop varies. The negative sign in the equation is explained by Lenz's law, which states that the induced current in a closed conducting loop produces a magnetic field that opposes the change in magnetic flux that caused the induction. 
@@ -28,9 +28,7 @@ This relation is a consequence of Faraday's discovery that a wire loop is subjec
 ## 1.4 The Ampère-Maxwell Law
 
 $$
-\nabla \times \mathbf{H}
-=
-\mathbf{J}_f + \frac{\partial \mathbf{D}}{\partial t}
+\nabla \times \mathbf{H}=\mathbf{J}_f + \frac{\partial \mathbf{D}}{\partial t}
 $$
 
 The Ampère-Maxwell law states that the curl of the magnetic field $\mathbf{H}$ equals the free current density plus the time derivative of the electric displacement. Here, the curl of $\mathbf{H}$ measures the local circulation of the magnetic field strength per unit area. The second term on the right corresponds to the displacement current density, defined as follows:
