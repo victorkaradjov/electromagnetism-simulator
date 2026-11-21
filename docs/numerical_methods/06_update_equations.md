@@ -10,15 +10,18 @@ $$
 \right|_{z=z_i,\;t=t_{n+\frac12}}
 &\approx
 \frac{H_y^{n+\frac12}(z_i+h)-H_y^{n+\frac12}(z_i-h)}{2h}
-\\[1.5em]
+\\
+\\
 &=
 \frac{H_y^{n+\frac12}(z_i+\frac{\Delta z}{2})-H_y^{n+\frac12}(z_i-\frac{\Delta z}{2})}{2(\frac{\Delta z}{2})}
-\\[1.5em]
+\\
+\\
 &=
 \frac{H_y^{n+\frac12}(z_i+\frac{\Delta z}{2})-H_y^{n+\frac12}(z_i-\frac{\Delta z}{2})}{\Delta z}
-\\[1.5em]
+\\
+\\
 &=
-\frac{H_y^{n+\frac12}(i+\frac12)-H_y^{n+\frac12}(i-\frac12)}{\Delta z} \\[1.5em]
+\frac{H_y^{n+\frac12}(i+\frac12)-H_y^{n+\frac12}(i-\frac12)}{\Delta z} 
 \end{aligned}
 $$
 
@@ -43,8 +46,9 @@ We can now solve for $E_x^{n+1} (i)$ in order to obtain the first FDTD update eq
 
 $$
 \begin{aligned}
-E_x^{n+1} (i) =  E_x^n (i) + \frac{\Delta t}{ \epsilon \Delta z} \left[H_y^{n+\frac12}(i-\frac12) - H_y^{n+\frac12}(i+\frac12) \right] \tag{1}
+E_x^{n+1} (i) =  E_x^n (i) + \frac{\Delta t}{ \epsilon \Delta z} \Bigg[H_y^{n+\frac12}(i-\frac12) - H_y^{n+\frac12}(i+\frac12) \Bigg] 
 \end{aligned}
+\qquad\qquad\qquad \text{(1)}
 $$
 
 For Faraday's law, we need to solve for $H_y^{n+1/2}(i+1/2)$ in order to obtain the second update equation. The temporal derivative of the magnetic field is approximated using a centered finite difference:
@@ -54,7 +58,8 @@ $$
 \left.\frac{\partial H_y}{\partial t}
 \right|_{z=z_{i+\frac12},\;t=t_{n}}
 &\approx
-\frac{H_y^{n+\frac12}(i+\frac12)-H_y^{n-\frac12}(i+\frac12)}{\Delta t} \\[1.5em]
+\frac{H_y^{n+\frac12}(i+\frac12)-H_y^{n-\frac12}(i+\frac12)}{\Delta t} \\
+\\
 \end{aligned}
 $$
 
@@ -81,8 +86,9 @@ By isolating $H_y^{n+\frac12}(i+\frac12)$, we obtain:
 
 $$
 \begin{aligned}
-H_y^{n +\frac12} (i + \frac12) = H_y^{n-\frac12}(i+\frac12) + \frac{\Delta t}{\mu \Delta z} \bigg[  E_x^n (i) - E_x^{n} (i+1) \bigg] \tag{2}
+H_y^{n +\frac12} (i + \frac12) = H_y^{n-\frac12}(i+\frac12) + \frac{\Delta t}{\mu \Delta z} \bigg[  E_x^n (i) - E_x^{n} (i+1) \bigg] 
 \end{aligned}
+\qquad\qquad\qquad \text{(2)}
 $$
 
 Although Ampère-Maxwell's equation was discretized first in this section, this is not the order in which the update equations are applied in the Yee algorithm. In fact, the magnetic field is first updated using Faraday's law, followed by the electric field using Ampère-Maxwell's law. The next section describes this sequence in more detail.
