@@ -60,8 +60,7 @@ $$
 The time step then becomes: 
 
 $$
-\boxed{
-\Delta t=S\frac{\Delta z}{v_{\max}},
-\qquad 0<S\leq1
-}
+\boxed{\Delta t = S\frac{\Delta z}{v_{\max}}}
+\qquad
+0 < S \leq 1
 $$
