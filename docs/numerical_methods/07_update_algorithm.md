@@ -53,7 +53,8 @@ The first magnetic-field update requires an initial value at $t=-\Delta t/2$, wh
 
 $$
 \begin{aligned}
-E_x^0 (i) &= 0 \\[1.5em]
+E_x^0 (i) &= 0 \\
+\\
 H_y^{-\frac12} (i+\frac12) &= 0
 \end{aligned}
 $$
@@ -100,14 +101,18 @@ $$
 \begin{aligned}
 \frac{|\tilde J_{s,x}(f_{\max})|}{|\tilde J_{s,x}(0)|}
 &= \exp\left(-\frac{f_{\max}^2}{2\sigma_f^2}\right)
-\\[1em]
+\\
+\\
 &= \exp\left(-\frac{(3\sigma_f)^2}{2\sigma_f^2}\right)
-\\[1em]
+\\
+\\
 &= e^{-\frac92}
-\\[1em]
+\\
+\\
 &\approx 0.0111
 \end{aligned}
 $$
+
 This cutoff is a practical choice. Frequency components above this limit have a spectral amplitude below approximately 1.1% of the maximum value and are therefore considered negligible for the simulation.
 
 With $f_{\max}$ defined, we can calculate the minimum wavelength:
@@ -177,7 +182,7 @@ $$
 and
 $$
 \left.\frac{\partial E_x}{\partial t} \right|_{z=z_i,\;t=t_{n+\frac12}}
-\approx \frac{E_x^{n+1} (i)\, - \, E_x^n (i)}{\Delta t}
+\approx \frac{E_x^{n+1} (i) -  E_x^n (i)}{\Delta t}
 $$
 
 We now evaluate the impressed current density at the corresponding spatial and temporal locations:
@@ -194,8 +199,7 @@ So the discretized update equation becomes:
 
 $$
 \frac{H_y^{n+\frac12}(i+\frac12)-H_y^{n+\frac12}(i-\frac12)}{\Delta z}  
-= - \epsilon \frac{E_x^{n+1} (i)\, - \, E_x^n (i)}{\Delta t}
-- J_{s,x}^{n+\frac12} (i)
+= - \epsilon \frac{E_x^{n+1} (i) -  E_x^n (i)}{\Delta t}-J_{s,x}^{n+\frac12} (i)
 $$
 
 and by isolating $E_x^{n+1} (i)$, we obtain:
@@ -243,7 +247,7 @@ $$
 E_x^{n+1}(N)+E_x^{n+1}(N-1)
 -E_x^n(N)-E_x^n(N-1)
 }{2\Delta t}
-\\[1.5em]
+\cr
 \frac{\partial E_x}{\partial z}
 &\approx
 \frac{
@@ -258,7 +262,7 @@ when substituted into equation (1), we obtain:
 $$
 E_x^{n+1}(N)=E_x^n(N-1)
 +\frac{v\Delta t-\Delta z}{v\Delta t+\Delta z}
-\left[E_x^{n+1}(N-1)-E_x^n(N)\right].
+\left[E_x^{n+1}(N-1)-E_x^n(N)\right]
 $$
 
 
@@ -281,12 +285,11 @@ $$
 The conditions then become:
 
 $$
-\boxed{
 \begin{aligned}
 E_x^{n+1}(N)
-&=E_x^n(N-1)+\alpha\left[E_x^{n+1}(N-1)-E_x^n(N)\right] \\[1.5em]
+&=E_x^n(N-1)+\alpha\left[E_x^{n+1}(N-1)-E_x^n(N)\right] \\
+\\
 E_x^{n+1}(0)
 &= E_x^n(1)+\alpha\left[E_x^{n+1}(1)-E_x^n(0)\right]
 \end{aligned}
-}
 $$
