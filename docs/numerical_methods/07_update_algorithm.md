@@ -4,6 +4,8 @@ The FDTD method follows the general principle of time-stepping. At each time ste
 
 Starting from the initialized field values, we first update the magnetic field $H_y^{n+\frac12}$ at the next half time step, using the electric field $E_x^n$ and the previously calculated magnetic field $H_y^{n-\frac12}$. The electric field is then updated to the next full time step, $E_x^{n+1}$, using the newly updated magnetic field $H_y^{n+\frac12}$ and the previously calculated electric-field value $E_x^n$.
 
+Because of the temporal staggering of the Yee scheme, the electric and magnetic energy quantities are calculated using field values at different time levels: $E_x^{n+1}$ and $H_y^{n+\frac12}$. Therefore, the calculated total energy is used as a numerical monitoring quantity rather than an instantaneous energy measurement at a synchronized time.
+
 We will now proceed with the general architecture of the update algorithm:
 
 ```text
@@ -19,31 +21,46 @@ For each time step:
 
 As mentioned previously, each field update requires the previously calculated value of the field being updated, as well as the corresponding value of the other field at its staggered time level. Therefore, initial values for both fields must be provided before the time-stepping loop begins.
 
-As for the time-stepping loop, each iteration corresponds to a time interval of $\Delta t$. Following the same principle as the Yee lattice, both fields are updated during each iteration, but at different time instants due to their temporal staggering. The field values can be recorded at user-defined intervals, expressed as an integer number of time steps.
+As for the time-stepping loop, each iteration corresponds to a time interval of $\Delta t$. Following the same principle as the Yee lattice, both fields are updated during each iteration, but at different time instants due to their temporal staggering. In the current implementation, field values and energy quantities are recorded at every time step.
 
 The following pseudocode provides a more detailed representation of the algorithm:
 
 ```text
 Initialize simulation parameters
-Initialize spatial grid
-Initialize material properties
 
-Initialize electric field Ex
-Initialize magnetic field Hy
+Set homogeneous material parameters
+Calculate wave speed from material parameters
+Calculate time step using the CFL condition
+
+Initialize spatial grid
+Initialize electric field Ex = 0
+Initialize magnetic field Hy = 0
 
 For each time step n:
+
+    Calculate source time:
+        t_source = (n + 1/2) * dt
+
+    Save the previous electric field:
+        Ex_previous = copy(Ex)
 
     Update magnetic field Hy at n + 1/2
         using Ex at n and Hy at n - 1/2
 
     Update electric field Ex at n + 1
         using Hy at n + 1/2 and Ex at n
+        Include the impressed current density source
 
-    If recording interval is reached:
-        Record electric and magnetic field values
+    Apply absorbing boundary conditions
+        using Ex_previous and the updated Ex
+
+    Record electric field at n + 1
+    Record magnetic field at n + 1/2
+
+    Calculate electric, magnetic and total field energy
 ```
 
-This pseudocode provides a general overview of the operations required for a one-dimensional FDTD simulation. Compared with the initial outline, we have added the spatial grid and material properties. Boundary conditions and source excitation are omitted from this overview, as they will be discussed in later sections.
+This pseudocode provides a general overview of the operations required for a one-dimensional FDTD simulation. The detailed algorithm includes source excitation and absorbing boundary conditions, which will be discussed in the following sections.
 
 ## 7.2 Initial Conditions and Initialization
 
@@ -53,9 +70,8 @@ The first magnetic-field update requires an initial value at $t=-\Delta t/2$, wh
 
 $$
 \begin{aligned}
-E_x^0 (i) &= 0 \\
-\\
-H_y^{-\frac12} (i+\frac12) &= 0
+E_x^0(i) &= 0 \\
+H_y^{-\frac12}(i+\frac12) &= 0
 \end{aligned}
 $$
 
@@ -70,21 +86,33 @@ The first electromagnetic source to be implemented in the FDTD simulator is a Ga
 The temporal profile of the Gaussian pulse follows a bell-shaped function centered at the time instant $t_0$.
 
 $$
-J_{s,x} (t) = J_0 \exp{ \bigg( - \frac{(t - t_0)^2}{2 \sigma_t^2}\bigg)}
+J_{s,x}(t)=J_0\exp\left[-\left(\frac{t-t_0}{\tau}\right)^2\right]
 $$
 
 where the variables are defined as follows:
 
-- $J_0$: Maximum amplitude of the impressed current density $(A/m²)$
-- $t_0$: Time instant at which the pulse reaches its maximum amplitude $(s)$
-- $\sigma_t$: Characteristic temporal width of the pulse $(s)$
+- $J_0$: Maximum amplitude of the impressed current density $(\mathrm{A/m^2})$
+- $t_0$: Time instant at which the pulse reaches its maximum amplitude $(\mathrm{s})$
+- $\tau$: Characteristic temporal width parameter of the pulse $(\mathrm{s})$
 
-To ensure that the initial amplitude of the Gaussian pulse is negligible, $t_0$ is generally chosen to be several times larger than $\sigma_t$.
+To ensure that the initial amplitude of the Gaussian pulse is negligible, $t_0$ is generally chosen to be several times larger than $\tau$.
 
-The pulse width $\sigma_t$ also determines the characteristic width of the frequency spectrum:
+The pulse width $\tau$ also determines the characteristic width of the frequency spectrum. Using the Fourier transform convention based on frequency $f$ in hertz, the normalized spectral amplitude is:
 
 $$
-\sigma_f = \frac{1}{2\pi\sigma_t}
+\frac{|\tilde J_{s,x}(f)|}{|\tilde J_{s,x}(0)|}=\exp\left(-\pi^{2}\tau^{2}f^{2}\right)
+$$
+
+This expression can also be written in the standard Gaussian form:
+
+$$
+\frac{|\tilde J_{s,x}(f)|}{|\tilde J_{s,x}(0)|}=\exp\left(-\frac{f^{2}}{2\sigma_f^{2}}\right)
+$$
+
+where the characteristic frequency width is:
+
+$$
+\sigma_f=\frac{1}{\sqrt{2}\pi\tau}
 $$
 
 Therefore, the pulse width must be selected in conjunction with the spatial and temporal resolutions of the simulation to ensure that its relevant frequency content can be adequately represented.
@@ -92,23 +120,16 @@ Therefore, the pulse width must be selected in conjunction with the spatial and 
 For convenience, we define a practical upper frequency cutoff $f_{\max}$ as:
 
 $$
-f_{max} = 3\sigma_f = \frac{3}{2\pi\sigma_t}
+f_{\max}=3\sigma_f
 $$
 
-At the cutoff frequency $f_{\max}=3\sigma_f$, the normalized spectral amplitude is:
+At the cutoff frequency, the normalized spectral amplitude is:
 
 $$
 \begin{aligned}
 \frac{|\tilde J_{s,x}(f_{\max})|}{|\tilde J_{s,x}(0)|}
-&= \exp\left(-\frac{f_{\max}^2}{2\sigma_f^2}\right)
-\\
-\\
-&= \exp\left(-\frac{(3\sigma_f)^2}{2\sigma_f^2}\right)
-\\
-\\
-&= e^{-\frac92}
-\\
-\\
+&=\exp\left(-\frac{(3\sigma_f)^2}{2\sigma_f^2}\right)\\
+&=e^{-\frac92}\\
 &\approx 0.0111
 \end{aligned}
 $$
@@ -118,7 +139,7 @@ This cutoff is a practical choice. Frequency components above this limit have a 
 With $f_{\max}$ defined, we can calculate the minimum wavelength:
 
 $$
-\lambda_{min} = \frac{v_{min}}{f_{max}}
+\lambda_{\min}=\frac{v_{\min}}{f_{\max}}
 $$
 
 where $v_{\min}$ is the minimum wave speed among all materials considered in the simulation, under the assumption that the media are non-dispersive. We define $v_{\min}$ as:
@@ -132,7 +153,7 @@ where $v_j$ is the wave speed in medium $j$, and $M$ is the number of distinct m
 For a homogeneous material, we have the following relation:
 
 $$
-\lambda_{min} = \frac{v}{f_{max}}
+\lambda_{\min}=\frac{v}{f_{\max}}
 $$
 
 where $v$ is the wave speed in the homogeneous medium.
@@ -142,8 +163,10 @@ We initially choose a target value of $N_\lambda=15$ spatial cells per wavelengt
 Therefore, the corresponding spatial grid spacing is:
 
 $$
-\Delta z = \frac{\lambda_{min}}{N_\lambda}
+\Delta z=\frac{\lambda_{\min}}{N_\lambda}
 $$
+
+This relation provides a guideline for selecting the spatial resolution. In the current implementation, the spatial step is specified directly as a simulation parameter rather than being calculated automatically from the source frequency.
 
 ### 7.3.2 Source Injection
 
@@ -154,7 +177,7 @@ This decision is based on the flexibility it provides. A soft source implies tha
 The source excitation is introduced as an impressed current density defined as:
 
 $$
-\mathbf{J_s} = J_{s,x}\, \mathbf{\hat{x}}
+\mathbf{J_s}=J_{s,x}\,\mathbf{\hat{x}}
 $$
 
 The impressed current density depends on both position and time. Its temporal variation is defined by a Gaussian pulse, while its spatial distribution determines the source location.
@@ -166,26 +189,30 @@ $$
 This source term is introduced in the Ampère-Maxwell law in one dimension:
 
 $$
-\frac{\partial H_y}{\partial z} = - \epsilon \frac{\partial E_x}{\partial t} - J_{s,x}
+\frac{\partial H_y}{\partial z}=-\epsilon\frac{\partial E_x}{\partial t}-J_{s,x}
 $$
 
 In Section 6.1, we derived the following finite-difference approximations:
 
 $$
-\begin{aligned}
-\left.\frac{\partial H_y^{n+\frac12}}{\partial z}
-\right|_{z=z_i,\;t=t_{n+\frac12}}
+\left.\frac{\partial H_y^{n+\frac12}}{\partial z}\right|_{z=z_i,\;t=t_{n+\frac12}}
 \approx
-\frac{H_y^{n+\frac12}(i+\frac12)-H_y^{n+\frac12}(i-\frac12)}{\Delta z} 
-\end{aligned}
-$$
-and
-$$
-\left.\frac{\partial E_x}{\partial t} \right|_{z=z_i,\;t=t_{n+\frac12}}
-\approx \frac{E_x^{n+1} (i) -  E_x^n (i)}{\Delta t}
+\frac{H_y^{n+\frac12}(i+\frac12)-H_y^{n+\frac12}(i-\frac12)}{\Delta z}
 $$
 
-We now evaluate the impressed current density at the corresponding spatial and temporal locations:
+and
+
+$$
+\left.\frac{\partial E_x}{\partial t}\right|_{z=z_i,\;t=t_{n+\frac12}}
+\approx
+\frac{E_x^{n+1}(i)-E_x^n(i)}{\Delta t}
+$$
+
+We now evaluate the impressed current density at the corresponding spatial and temporal locations.
+
+The source is evaluated at the half time step $t_{n+\frac12}=\left(n+\frac12\right)\Delta t$.
+
+Its spatial distribution is defined as:
 
 $$
 J_{s,x}^{n+\frac12}(i)=
@@ -195,44 +222,49 @@ J_{s,x}(t_{n+\frac12}), & i=i_s\\
 \end{cases}
 $$
 
+where $i_s$ is the spatial index of the source location.
+
 So the discretized update equation becomes:
 
 $$
-\frac{H_y^{n+\frac12}(i+\frac12)-H_y^{n+\frac12}(i-\frac12)}{\Delta z}  
-= - \epsilon \frac{E_x^{n+1} (i) -  E_x^n (i)}{\Delta t}-J_{s,x}^{n+\frac12} (i)
+\frac{H_y^{n+\frac12}(i+\frac12)-H_y^{n+\frac12}(i-\frac12)}{\Delta z}
+=-\epsilon\frac{E_x^{n+1}(i)-E_x^n(i)}{\Delta t}
+-J_{s,x}^{n+\frac12}(i)
 $$
 
-and by isolating $E_x^{n+1} (i)$, we obtain:
+By isolating $E_x^{n+1}(i)$, we obtain:
 
 $$
 \boxed{
+\begin{aligned}
 E_x^{n+1}(i)=E_x^n(i)
-+\frac{\Delta t}{\epsilon\Delta z}
-\left[H_y^{n+\frac12}\left(i-\frac12\right)
--H_y^{n+\frac12}\left(i+\frac12\right)\right]
--\frac{\Delta t}{\epsilon}J_{s,x}^{n+\frac12}(i)
+&+\frac{\Delta t}{\epsilon\Delta z}
+\left[H_y^{n+\frac12}\left(i-\frac12\right)-H_y^{n+\frac12}\left(i+\frac12\right)\right]\\
+&-\frac{\Delta t}{\epsilon}J_{s,x}^{n+\frac12}(i)
+\end{aligned}
 }
 $$
 
-## 7.4 Absorbing Boundary Conditions 
+## 7.4 Absorbing Boundary Conditions
 
 Because the simulation domain is finite, a wave reaching one of the simulation boundaries is at risk of being reflected back into the domain. These artificial reflections can superimpose on the physical waves, causing inaccurate results.
 
 To address this problem, we implement an absorbing boundary condition to approximate an open domain, allowing outgoing waves to leave the computational domain while minimizing artificial reflections.
 
-From the one-dimensional wave equation, we obtain the following outgoing-wave conditions:
+From the one-dimensional wave equation, we obtain the following outgoing-wave conditions.
 
 At the right boundary:
 
 $$
-\frac{\partial E_x}{\partial t} + v \frac{\partial E_x}{\partial z} = 0 \tag{1}
+\frac{\partial E_x}{\partial t}+v\frac{\partial E_x}{\partial z}=0
+\tag{1}
 $$
 
 At the left boundary:
 
 $$
-\frac{\partial E_x}{\partial t}
--v\frac{\partial E_x}{\partial z}=0 \tag{2}
+\frac{\partial E_x}{\partial t}-v\frac{\partial E_x}{\partial z}=0
+\tag{2}
 $$
 
 For Mur's first-order absorbing boundary condition, we approximate the outgoing-wave equations with centered finite differences in space and time.
@@ -243,53 +275,44 @@ $$
 \begin{aligned}
 \frac{\partial E_x}{\partial t}
 &\approx
-\frac{
-E_x^{n+1}(N)+E_x^{n+1}(N-1)
--E_x^n(N)-E_x^n(N-1)
-}{2\Delta t}
-\cr
+\frac{E_x^{n+1}(N)+E_x^{n+1}(N-1)-E_x^n(N)-E_x^n(N-1)}{2\Delta t}\\
 \frac{\partial E_x}{\partial z}
 &\approx
-\frac{
-E_x^{n+1}(N)-E_x^{n+1}(N-1)
-+E_x^n(N)-E_x^n(N-1)
-}{2\Delta z}
+\frac{E_x^{n+1}(N)-E_x^{n+1}(N-1)+E_x^n(N)-E_x^n(N-1)}{2\Delta z}
 \end{aligned}
 $$
 
-when substituted into equation (1), we obtain:
+When substituted into equation (1), we obtain:
 
 $$
-E_x^{n+1}(N)=E_x^n(N-1)
-+\frac{v\Delta t-\Delta z}{v\Delta t+\Delta z}
-\left[E_x^{n+1}(N-1)-E_x^n(N)\right]
+E_x^{n+1}(N)=E_x^n(N-1)+\frac{v\Delta t-\Delta z}{v\Delta t+\Delta z}\left[E_x^{n+1}(N-1)-E_x^n(N)\right]
 $$
-
 
 By applying the same logic to the left boundary, we obtain:
 
 $$
-E_x^{n+1}(0)=
-E_x^n(1)
-+
-\frac{v\Delta t-\Delta z}{v\Delta t+\Delta z}
-\left[E_x^{n+1}(1)-E_x^n(0)\right]
+E_x^{n+1}(0)=E_x^n(1)+\frac{v\Delta t-\Delta z}{v\Delta t+\Delta z}\left[E_x^{n+1}(1)-E_x^n(0)\right]
 $$
 
 To simplify the implementation, we define the following coefficient:
 
 $$
-\alpha = \frac{v \Delta t - \Delta z}{v \Delta t + \Delta z}
+\alpha=\frac{v\Delta t-\Delta z}{v\Delta t+\Delta z}
+$$
+
+For the homogeneous medium considered in the current implementation, the coefficient can also be expressed using the Courant number $S=\frac{v\Delta t}{\Delta z}$:
+
+$$
+\alpha=\frac{S-1}{S+1}
 $$
 
 The conditions then become:
 
 $$
 \begin{aligned}
-E_x^{n+1}(N)
-&=E_x^n(N-1)+\alpha\left[E_x^{n+1}(N-1)-E_x^n(N)\right] \\
-\\
-E_x^{n+1}(0)
-&= E_x^n(1)+\alpha\left[E_x^{n+1}(1)-E_x^n(0)\right]
+E_x^{n+1}(N)&=E_x^n(N-1)+\alpha\left[E_x^{n+1}(N-1)-E_x^n(N)\right]\\
+E_x^{n+1}(0)&=E_x^n(1)+\alpha\left[E_x^{n+1}(1)-E_x^n(0)\right]
 \end{aligned}
 $$
+
+The first-order Mur boundary condition is an approximation of an open boundary. It reduces artificial reflections but does not eliminate them completely. Its accuracy depends on the wave characteristics and the simulation conditions.
