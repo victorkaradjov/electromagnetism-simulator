@@ -1,34 +1,45 @@
 # Electromagnetism Simulator
 
-A numerical simulation project focused on solving and visualizing Maxwell's equations using computational methods.
+A Python-based numerical simulator for studying and visualizing electromagnetic wave propagation using the Finite-Difference Time-Domain (FDTD) method.
 
 ## Overview
 
-This project aims to develop a numerical electromagnetic simulator to explore the behavior and propagation of electromagnetic fields.
+This project implements a one-dimensional (1D) electromagnetic simulator based on Maxwell's equations. It uses the Finite-Difference Time-Domain (FDTD) method to calculate the time evolution of electric and magnetic fields in space.
 
-The main objective is to implement the Finite-Difference Time-Domain (FDTD) method to solve Maxwell's equations numerically.
+The current implementation models electromagnetic wave propagation in a homogeneous, isotropic, linear, and lossless medium.
 
-## Theoretical Background
+## Numerical Method
 
-The simulator is based on Maxwell's equations:
+The simulator uses the Yee scheme to discretize Maxwell's equations in both space and time.
 
-- Gauss's law for electricity
-- Gauss's law for magnetism
-- Faraday's law of induction
-- Ampère-Maxwell law
+Key features include:
+- One-dimensional electromagnetic wave propagation.
+- Staggered spatial and temporal grids for electric and magnetic fields.
+- Gaussian current-density source.
+- First-order Mur absorbing boundary conditions.
+- Monitoring of electric, magnetic, and total field energy.
+- Field propagation and energy visualization.
 
-The FDTD method will be used to discretize space and time and compute the evolution of electromagnetic fields.
+The time step is constrained by the Courant-Friedrichs-Lewy (CFL) stability condition.
 
 ## Project Structure
 
 ```text
 electromagnetism-simulator/
-├── src/          # Source code
-├── docs/         # Theoretical notes and documentation
-├── tests/        # Tests
-├── README.md
-├── requirements.txt
-└── .gitignore
+├── docs/
+│   ├── theory/               # Theoretical foundations
+│   └── numerical_methods/    # FDTD numerical methods
+├── src/
+│   ├── fdtd/
+│   │   ├── fields.py         # Field initialization
+│   │   ├── grid.py            # Spatial grid generation
+│   │   ├── source.py          # Gaussian source
+│   │   ├── update.py          # Field updates and boundary conditions
+│   │   ├── simulation.py      # Main simulation loop
+│   │   └── visualization.py   # Field and energy plots
+│   ├── tests/                 # Unit tests
+│   └── main.py                # Simulation entry point
+└── README.md
 ```
 
 ## Technologies
@@ -36,24 +47,71 @@ electromagnetism-simulator/
 - Python
 - NumPy
 - Matplotlib
+- pytest
 - Git and GitHub
+
+## Installation
+
+Clone the repository:
+
+```bash
+git clone https://github.com/victorkaradjov/electromagnetism-simulator.git
+cd electromagnetism-simulator
+```
+
+Create and activate a virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+On Windows PowerShell:
+
+```powershell
+.\.venv\Scripts\Activate.ps1
+```
+
+Install the dependencies:
+
+```bash
+pip install numpy matplotlib pytest
+```
+
+## Running the Simulation
+
+From the project root, set the source directory in the Python path:
+
+```powershell
+$env:PYTHONPATH = "$PWD\src"
+python .\src\main.py
+```
+
+The simulation will run and display plots of electromagnetic field propagation and field energy over time.
+
+## Running the Tests
+
+From the project root:
+
+```powershell
+$env:PYTHONPATH = "$PWD\src"
+python -m pytest src/tests/ -v
+```
 
 ## Current Status
 
-The project is currently in development.
+The first working version of the 1D FDTD solver has been implemented.
 
-Current focus:
-- Studying the theoretical foundations of Maxwell's equations.
-- Exploring the FDTD numerical method.
-- Designing the software architecture.
-- Preparing the implementation of the numerical solver.
+The current focus is on:
+- Reviewing and validating the theoretical and numerical foundations.
+- Improving the implementation and its test coverage.
+- Refining the simulation and visualization tools.
 
 ## Future Goals
 
-- Implement a basic 1D FDTD solver.
-- Extend the simulation to two dimensions.
-- Visualize electromagnetic field propagation.
-- Explore different electromagnetic configurations and boundary conditions.
+- Extend the solver to two-dimensional (2D) electromagnetic simulations.
+- Explore different material properties and electromagnetic configurations.
+- Implement additional absorbing boundary conditions.
+- Investigate more advanced electromagnetic phenomena and numerical methods.
 
 ## Author
 
