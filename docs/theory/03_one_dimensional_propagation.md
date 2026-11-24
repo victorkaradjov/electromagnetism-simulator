@@ -30,11 +30,11 @@ The fields are perpendicular to each other and to the direction of propagation: 
 
 ## 3.3. Model assumptions
 
-The medium is assumed to be linear, isotropic, homogeneous, lossless, and non-dispersive, consistent with the assumptions made in Section 2.
+Starting from [Maxwell's Equations](01_maxwell_equations.md), applying Faraday's law and the Ampère-Maxwell law to the selected field configuration gives:
 
 ## 3.4. Reduced Maxwell equations
 
-Applying Faraday's law and the Ampère-Maxwell law to the selected field configuration gives:
+Starting from [Maxwell's Equations](01_maxwell_equations.md), applying Faraday's law and the Ampère-Maxwell law to the selected field configuration gives:
 
 $$
 \frac{\partial E_x}{\partial z} = -\frac{\partial B_y}{\partial t}
