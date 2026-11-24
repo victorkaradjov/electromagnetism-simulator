@@ -2,7 +2,7 @@
 
 The time step must be selected according to the Courant-Friedrichs-Lewy (CFL) condition.
 
-For the one-dimensional model we previously defined the wave speed as:
+Using the constitutive relations introduced in [Constitutive Relations](../theory/02_constitutive_relations.md), the wave speed for the one-dimensional model is derived in [One-Dimensional Propagation](../theory/03_one_dimensional_propagation.md):
 
 $$
 v = \frac{1}{\sqrt{\mu \epsilon}}
