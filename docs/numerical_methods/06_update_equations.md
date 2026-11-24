@@ -1,6 +1,6 @@
 ## 6.1 Discretization of Maxwell's Equations
 
-To apply the Yee algorithm, we need finite-difference approximations for the spatial and temporal derivatives in Equations (1) and (2).
+Using the one-dimensional field configuration introduced in [One-Dimensional Propagation](../theory/03_one_dimensional_propagation.md) and the staggered field locations defined in [Yee Lattice](05_yee_lattice.md), we can derive the finite-difference approximations required by the Yee algorithm.
 
 For the following derivation, we first consider the source-free form of Ampère-Maxwell's equation. The impressed current density source will be incorporated into the electric-field update equation in Section 7.3.2.
 
@@ -67,4 +67,4 @@ H_y^{n+\frac12}\left(i+\frac12\right) = H_y^{n-\frac12}\left(i+\frac12\right) + 
 \tag{2}
 $$
 
-Although Ampère-Maxwell's equation was discretized first in this section, this is not the order in which the update equations are applied in the Yee algorithm. In fact, the magnetic field is first updated using Faraday's law, followed by the electric field using Ampère-Maxwell's law. The next section describes this sequence in more detail.
+Although Ampère-Maxwell's equation was discretized first in this section, this is not the order in which the update equations are applied in the Yee algorithm. In fact, the magnetic field is first updated using Faraday's law, followed by the electric field using Ampère-Maxwell's law. The implementation of this update sequence is described in [FDTD Update Algorithm](07_update_algorithm.md).
