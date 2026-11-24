@@ -51,16 +51,12 @@ $$
 $$
 
 
-In the FDTD simulation, different media can be involved. Therefore, we consider the maximum wave speed:
+For simulations involving multiple homogeneous, non-dispersive media, the time step must satisfy the CFL condition for the fastest wave speed. Therefore, we define the maximum wave speed as $v_{\max}=\max(v_1,v_2,\ldots,v_M)$, where $v_j$ is the wave speed in medium $j$ and $M$ is the number of distinct media.
+
+The time step is then calculated using 
 
 $$
-v_{max} = \text{max}(v_1, v_2,\ldots, v_M)
+\Delta t=S\frac{\Delta z}{v_{\max}}
 $$
 
-The time step then becomes: 
-
-$$
-\boxed{\Delta t = S\frac{\Delta z}{v_{\max}}}
-\qquad
-0 < S \leq 1
-$$
+with $0<S\leq1$.
