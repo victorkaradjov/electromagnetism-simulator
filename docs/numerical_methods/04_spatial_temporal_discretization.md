@@ -1,6 +1,6 @@
 ## 4.1. Discretization of the computational domain
 
-In Section 3.5 of the Theory folder, the electromagnetic field components $E_x(z,t)$ and $H_y(z,t)$ were described using continuous functions of space and time. Since these fields are defined over continuous spatial and temporal domains, they can take values at infinitely many positions and time instants. However, a numerical simulation requires a finite number of field values. Therefore, the continuous spatial and temporal domains must be discretized.
+As described in [One-Dimensional Propagation](../theory/03_one_dimensional_propagation.md), the electromagnetic field components $E_x(z,t)$ and $H_y(z,t)$ are represented as continuous functions of space and time. Since these fields are defined over continuous spatial and temporal domains, they can take values at infinitely many positions and time instants. However, a numerical simulation requires a finite number of field values. Therefore, the continuous spatial and temporal domains must be discretized.
 
 For spatial discretization, we divide the computational domain into uniform spatial steps of size $\Delta z$, defined as:
 
