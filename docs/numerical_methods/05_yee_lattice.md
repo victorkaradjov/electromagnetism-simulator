@@ -5,11 +5,11 @@ In the Yee scheme, the electric field $E_x$ and the magnetic field $H_y$ are spa
 $$
 \begin{aligned}
 &E^n_x(i) &&\text{with position } z_i = i\Delta z \\
-\\
 &H^{n+\frac{1}{2}}_y  \bigg(i + \frac{1}{2}\bigg) &&\text{with position } z_{i+\frac{1}{2}} = \bigg(i + \frac{1}{2}\bigg)\Delta z
 \end{aligned}
 $$
 
+The underlying spatial and temporal grid discretization is introduced in [Discretization of the Computational Domain](04_spatial_temporal_discretization.md).
 
 ## 5.2 Temporal Staggering
 
