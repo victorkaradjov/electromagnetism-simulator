@@ -42,6 +42,7 @@ where $\epsilon$ is the absolute permittivity of the material, and $\epsilon_r$ 
 In the first version of the FDTD simulator, $\epsilon$ is treated as a real-valued, positive scalar constant, independent of space, time and frequency. This corresponds to a homogeneous, time-invariant and non-dispersive dielectric medium. Dielectric losses and frequency-dependent effects are therefore neglected.
 
 For magnetic materials, the general relation defining the magnetic flux density is:
+
 $$
 \mathbf{B}=\mu_0(\mathbf{H}+\mathbf{M})
 $$
