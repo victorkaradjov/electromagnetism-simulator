@@ -38,12 +38,12 @@ $$
 $$
 
 where $\epsilon$ is the absolute permittivity of the material, and $\epsilon_r$ is its relative permittivity.
-In the first version of the FDTD simulator, we assume that $\epsilon$ is constant in both time and space. This corresponds to a homogeneous, time-invariant and non-dispersive medium. Consequently, the frequency dependence of the permittivity is neglected.
+
+In the first version of the FDTD simulator, $\epsilon$ is treated as a real-valued, positive scalar constant, independent of space, time and frequency. This corresponds to a homogeneous, time-invariant and non-dispersive dielectric medium. Dielectric losses and frequency-dependent effects are therefore neglected.
 
 For magnetic materials, the general relation defining the magnetic flux density is:
-
 $$
-\mathbf{B} = \mu_0(\mathbf{H + M})
+\mathbf{B}=\mu_0(\mathbf{H}+\mathbf{M})
 $$
 
 Here, $\mathbf M$ is the magnetization vector, which describes the macroscopic magnetic response of the material to an applied magnetic field.
@@ -73,7 +73,7 @@ $$
 
 where $\mu_r$ is the relative permeability of the material.
 
-As with the absolute permittivity $\epsilon$, we assume that the absolute permeability $\mu$ is constant in both space and time. This corresponds to a homogeneous, time-invariant and non-dispersive magnetic medium.
+As with the absolute permittivity $\epsilon$, the absolute permeability $\mu$ is treated as a real-valued, positive scalar constant, independent of space, time and frequency. This corresponds to a homogeneous, time-invariant and non-dispersive magnetic medium. Magnetic losses and frequency-dependent effects are therefore neglected.
 
 This gives the following constitutive relation:
 
