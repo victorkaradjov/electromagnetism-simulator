@@ -6,6 +6,8 @@ $$
 
 Gauss's law states that the divergence of the electric displacement $\mathbf{D}$ equals the free volume charge density $\rho_f$ of the medium. Free charges are distinct from bound charges, which are associated with the polarization of the material. This formulation is particularly useful because the effects of material polarization are accounted for in the electric displacement field. Consequently, Gauss's law for $\mathbf{D}$ involves only the free charge density. The constitutive relation defining the electric displacement field is presented in Section 3.
 
+In the current one-dimensional transverse-field model, the electric field has only an x-component and varies along the z-axis. Consequently, its divergence is zero and the free charge density is assumed to be zero. The simulator does not explicitly model or evolve the free charge density.
+
 ## 1.2 Gauss's Law (Magnetism)
 
 $$
@@ -39,6 +41,8 @@ $$
 
 The displacement current density introduced by Maxwell in Ampère's law plays a crucial role in the propagation of electromagnetic waves, as a changing electric displacement contributes to the generation of a magnetic field. When compared with Faraday's law, Ampère-Maxwell's law reveals a symmetry in the coupling between the spatial curl of each field and the temporal variation of the other field. This coupling between the electric and magnetic fields is essential for understanding the propagation of electromagnetic waves.
 
+In the current FDTD implementation, the free current density is represented by a prescribed impressed current density source, denoted by $\mathbf{J_s}$. This source is introduced directly into Ampère-Maxwell's law and defines the electromagnetic excitation applied to the system. At this stage, no additional conduction current is modeled.
+
 ## 1.5 Summary of Variables
 
 The following table summarizes the variables introduced so far.
@@ -51,5 +55,6 @@ The following table summarizes the variables introduced so far.
 | $\mathbf{B}$ | Magnetic flux density | $T$ | Vector field describing the magnetic contribution to the Lorentz force exerted on a moving charge |
 | $\mathbf{H}$ | Magnetic field strength | $A/m$ | Vector field describing the macroscopic magnetic field strength, accounting for the magnetization of the material |
 | $\rho_f$ | Free volume charge density | $C/m^3$ | Scalar quantity representing the amount of free charge per unit volume |
-| $\mathbf{J}_f$ | Free current density | $A/m^2$ | Vector field representing the free current per unit cross-sectional area |
+| $\mathbf{J}_f$ | Free current density | $A/m^2$ | Vector field representing the free electric current per unit cross-sectional area |
 | $\mathbf{J}_d$ | Displacement current density | $A/m^2$ | Vector field representing the time derivative of the electric displacement |
+| $\mathbf{J}_s$ | Impressed current density | $A/m^2$ | Prescribed current density used to excite the electromagnetic fields in the current FDTD implementation |
