@@ -1,5 +1,7 @@
 ## 2. Constitutive Relations
 
+These constitutive relations complement the macroscopic equations introduced in [Maxwell's Equations](01_maxwell_equations.md) by describing how electromagnetic fields interact with the material properties of a medium.
+
 For a dielectric material subjected to an electric field, the general macroscopic electric displacement field is defined as:
 
 $$
