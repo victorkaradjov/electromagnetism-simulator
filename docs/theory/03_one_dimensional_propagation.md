@@ -1,15 +1,15 @@
 ## 3.1. Geometry and propagation direction
 
-To gradually develop the FDTD simulator, electromagnetic wave propagation will initially be modeled in one dimension along the z-axis to reduce the complexity of the problem. A two-dimensional extension will be considered afterward.
+To gradually develop the FDTD simulator, electromagnetic wave propagation will initially be modeled in one dimension along the $z$-axis to reduce the complexity of the problem. A two-dimensional extension will be considered afterward.
 
 ## 3.2. Field components and polarization
 
-The electric field is polarized along the x-axis, while the magnetic field strength is polarized along the y-axis. The fields are represented by:
+The electric field is polarized along the $x$-axis, while the magnetic field strength is polarized along the $y$-axis. The fields are represented by:
 
 $$
-\mathbf{E} = E_x\hat{\mathbf{x}}
+\mathbf{E} = E_x\,\hat{\mathbf{x}}
 \qquad
-\mathbf{H} = H_y\hat{\mathbf{y}}
+\mathbf{H} = H_y\,\hat{\mathbf{y}}
 $$
 
 ```text
@@ -25,6 +25,7 @@ $$
        v
   y  (H_y)
 ```
+
 The fields are perpendicular to each other and to the direction of propagation: $\mathbf{E} \times \mathbf{H}$ points along $+z$.
 
 ## 3.3. Model assumptions
@@ -42,50 +43,59 @@ $$
 and
 
 $$
-\frac{\partial H_y}{\partial z} = -\frac{\partial D_x}{\partial t}
+\frac{\partial H_y}{\partial z} = -\frac{\partial D_x}{\partial t} - J_{s,x}
 $$
 
 We can then use the constitutive relations $D_x = \epsilon E_x$ and $B_y = \mu H_y$ to obtain the following relations:
 
 $$
-\begin{aligned}
-\frac{\partial E_x}{\partial z}
-&= -\mu\frac{\partial H_y}{\partial t}
-&& \text{(1)}\\
-\frac{\partial H_y}{\partial z}
-&= -\epsilon\frac{\partial E_x}{\partial t}
-&& \text{(2)}
-\end{aligned}
+\frac{\partial E_x}{\partial z} = -\mu \frac{\partial H_y}{\partial t} \qquad \qquad\text{(1)}
 $$
 
-
+$$
+\frac{\partial H_y}{\partial z} = -\epsilon \frac{\partial E_x}{\partial t} - J_{s,x} \qquad \text{(2)}
+$$
 
 ## 3.5. Wave propagation
+
+The following derivation considers source-free propagation, where $J_{s,x} = 0$. Under this condition, equation (2) reduces to:
+
+$$
+\frac{\partial H_y}{\partial z} = -\epsilon \frac{\partial E_x}{\partial t}
+$$
 
 To obtain the wave equations, we differentiate equation (1) with respect to the spatial coordinate $z$:
 
 $$
-\begin{equation} 
-\begin{split}
-\frac{\partial^2 E_x}{\partial z^2} =& - \mu \frac{\partial}{\partial z}\bigg(\frac{\partial H_y}{\partial t}\bigg) \\ 
-=&  - \mu \frac{\partial}{\partial t}\bigg(\frac{\partial H_y}{\partial z}\bigg) \\
-=& - \mu \frac{\partial}{\partial t}\bigg(-\epsilon\frac{\partial E_x}{\partial t}\bigg) \\
-=&  \mu\epsilon \frac{\partial^2 E_x}{\partial t^2} \\
-\end{split}
-\end{equation} \tag{3}
+\begin{aligned}
+\frac{\partial^2 E_x}{\partial z^2}
+&= -\mu \frac{\partial}{\partial z}\left(\frac{\partial H_y}{\partial t}\right) \\
+&= -\mu \frac{\partial}{\partial t}\left(\frac{\partial H_y}{\partial z}\right) \\
+&= -\mu \frac{\partial}{\partial t}\left(-\epsilon \frac{\partial E_x}{\partial t}\right) \\
+&= \mu\epsilon \frac{\partial^2 E_x}{\partial t^2} \qquad\qquad\qquad \text{(3)}
+\end{aligned}
 $$
 
 By following the same steps with equation (2), we obtain:
 
 $$
-\begin{equation} 
-\begin{split}
-\frac{\partial^2 H_y}{\partial z^2} =& - \epsilon \frac{\partial}{\partial z}\bigg(\frac{\partial E_x}{\partial t}\bigg) \\ 
-=&  - \epsilon \frac{\partial}{\partial t}\bigg(\frac{\partial E_x}{\partial z}\bigg) \\
-=& - \epsilon \frac{\partial}{\partial t}\bigg(-\mu\frac{\partial H_y}{\partial t}\bigg) \\
-=&  \mu\epsilon \frac{\partial^2 H_y}{\partial t^2} \\
-\end{split} 
-\end{equation} \tag{4}
+\begin{aligned}
+\frac{\partial^2 H_y}{\partial z^2}
+&= -\epsilon \frac{\partial}{\partial z}\left(\frac{\partial E_x}{\partial t}\right) \\
+&= -\epsilon \frac{\partial}{\partial t}\left(\frac{\partial E_x}{\partial z}\right) \\
+&= -\epsilon \frac{\partial}{\partial t}\left(-\mu \frac{\partial H_y}{\partial t}\right) \\
+&= \mu\epsilon \frac{\partial^2 H_y}{\partial t^2} \qquad\qquad\qquad \text{(4)}
+\end{aligned}
+$$
+
+When the impressed current density is present, the corresponding wave equations become:
+
+$$
+\frac{\partial^2 E_x}{\partial z^2} - \mu\epsilon \frac{\partial^2 E_x}{\partial t^2} = \mu \frac{\partial J_{s,x}}{\partial t}
+$$
+
+$$
+\frac{\partial^2 H_y}{\partial z^2} - \mu\epsilon \frac{\partial^2 H_y}{\partial t^2} = -\frac{\partial J_{s,x}}{\partial z}
 $$
 
 Equations (3) and (4) now represent the governing wave equations for the selected field components. From these equations, we obtain the theoretical wave speed:
@@ -94,16 +104,17 @@ $$
 v = \frac{1}{\sqrt{\mu\epsilon}}
 $$
 
-A sinusoidal solution for the electric and magnetic fields can be expressed as follows, with the relationship between the electric and magnetic field amplitudes obtained from Maxwell's equations:
+In a source-free homogeneous medium, a sinusoidal solution for the electric and magnetic fields propagating along the positive $z$-direction can be expressed as follows, with the relationship between the electric and magnetic field amplitudes obtained from Maxwell's equations:
 
 $$
-\begin{align}
-E_x(z,t) &= E_0\cos(kz - \omega t + \delta)\ \\
-H_y(z,t) &= H_0\cos(kz - \omega t + \delta)
-\end{align}
+\begin{aligned}
+E_x(z,t) &= E_0 \cos(kz - \omega t + \delta) \\
+H_y(z,t) &= H_0 \cos(kz - \omega t + \delta)
+\end{aligned}
 $$
 
 where the variables are defined as follows:
+
 - $E_0$ : Electric field amplitude
 - $H_0$ : Magnetic field strength amplitude
 - $z$ : Spatial coordinate
@@ -118,11 +129,15 @@ where the variables are defined as follows:
 The following relations also apply:
 
 $$
-\begin{align*}
-\lambda &= \frac{2\pi}{k}
-& \omega &= 2\pi f
-& v &= f\lambda = \frac{\omega}{k} \\
-\eta &= \sqrt{\frac{\mu}{\epsilon}}
-& H_0 &= \frac{E_0}{\eta}
-\end{align*}
+\lambda = \frac{2\pi}{k}
+\qquad
+\omega = 2\pi f
+\qquad
+v = f\lambda = \frac{\omega}{k}
+$$
+
+$$
+\eta = \sqrt{\frac{\mu}{\epsilon}}
+\qquad
+H_0 = \frac{E_0}{\eta}
 $$
