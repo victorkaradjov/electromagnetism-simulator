@@ -18,10 +18,9 @@ For each time step:
     Update electric field
     Record field values if needed
 ```
-
 As mentioned previously, each field update requires the previously calculated value of the field being updated, as well as the corresponding value of the other field at its staggered time level. Therefore, initial values for both fields must be provided before the time-stepping loop begins.
 
-As for the time-stepping loop, each iteration corresponds to a time interval of $\Delta t$. Following the same principle as the Yee lattice, both fields are updated during each iteration, but at different time instants due to their temporal staggering. In the current implementation, field values and energy quantities are recorded at every time step.
+As for the time-stepping loop, each iteration corresponds to a time interval of $\Delta t$. Following the [Yee lattice](05_yee_lattice.md), both fields are updated during each iteration, but at different time instants due to their temporal staggering. In the current implementation, field values and energy quantities are recorded at every time step. The time step is selected according to the [CFL stability condition](08_cfl_stability.md).
 
 The following pseudocode provides a more detailed representation of the algorithm:
 
@@ -59,6 +58,7 @@ For each time step n:
 
     Calculate electric, magnetic and total field energy
 ```
+The finite-difference equations used to update the electric and magnetic fields are derived in [FDTD Update Equations](06_update_equations.md).
 
 This pseudocode provides a general overview of the operations required for a one-dimensional FDTD simulation. The detailed algorithm includes source excitation and absorbing boundary conditions, which will be discussed in the following sections.
 
